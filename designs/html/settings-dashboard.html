@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-dim": "#131313",
+              "surface-container-low": "#1b1b1c",
+              "on-tertiary-fixed": "#00201a",
+              "outline": "#8a919d",
+              "on-background": "#e5e2e1",
+              "tertiary-fixed-dim": "#61dac1",
+              "surface-container-lowest": "#0e0e0e",
+              "surface-variant": "#353535",
+              "outline-variant": "#404751",
+              "on-secondary-container": "#b6b5b4",
+              "surface": "#131313",
+              "on-error-container": "#ffdad6",
+              "on-surface-variant": "#c0c7d3",
+              "on-secondary": "#303030",
+              "on-secondary-fixed-variant": "#474747",
+              "on-tertiary-container": "#ffffff",
+              "secondary": "#c8c6c6",
+              "error-container": "#93000a",
+              "surface-container": "#202020",
+              "surface-tint": "#9fcaff",
+              "inverse-primary": "#0061a4",
+              "background": "#131313",
+              "primary-container": "#007acc",
+              "primary": "#9fcaff",
+              "on-error": "#690005",
+              "primary-fixed": "#d1e4ff",
+              "primary-fixed-dim": "#9fcaff",
+              "surface-bright": "#393939",
+              "on-tertiary": "#00382e",
+              "on-secondary-fixed": "#1b1c1c",
+              "inverse-surface": "#e5e2e1",
+              "tertiary": "#61dac1",
+              "error": "#ffb4ab",
+              "secondary-fixed": "#e4e2e1",
+              "secondary-container": "#474747",
+              "on-surface": "#e5e2e1",
+              "surface-container-highest": "#353535",
+              "on-tertiary-fixed-variant": "#005144",
+              "on-primary-fixed-variant": "#00497d",
+              "on-primary": "#003258",
+              "surface-container-high": "#2a2a2a",
+              "inverse-on-surface": "#303030",
+              "tertiary-fixed": "#80f7dc",
+              "on-primary-container": "#ffffff",
+              "on-primary-fixed": "#001d36",
+              "tertiary-container": "#008672",
+              "secondary-fixed-dim": "#c8c6c6"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"],
+              "mono": ["JetBrains Mono", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #353535; border-radius: 10px; }
+        .monolith-shadow { box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary/30 selection:text-primary overflow-hidden h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-[#0e0e0e] text-[#9fcaff] font-['JetBrains_Mono'] text-[0.85rem] flex justify-between items-center px-4 py-1 w-full border-b border-[#353535]/20 z-50">
+<div class="flex items-center gap-6">
+<span class="text-lg font-black tracking-tighter text-[#9fcaff]">AirBrowse</span>
+<nav class="hidden md:flex gap-4">
+<a class="text-[#a0a0a0] hover:text-[#e5e2e1] hover:bg-[#202020] px-2 py-0.5 transition-all" href="#">Explorer</a>
+<a class="text-[#9fcaff] border-b-2 border-[#9fcaff] px-2 py-0.5" href="#">Console</a>
+<a class="text-[#a0a0a0] hover:text-[#e5e2e1] hover:bg-[#202020] px-2 py-0.5 transition-all" href="#">Network</a>
+</nav>
+</div>
+<div class="flex items-center gap-3">
+<button class="hover:text-[#e5e2e1] hover:bg-[#202020] p-1 rounded transition-all active:scale-95 duration-100">
+<span class="material-symbols-outlined text-[1.2rem]">sync</span>
+</button>
+<button class="hover:text-[#e5e2e1] hover:bg-[#202020] p-1 rounded transition-all active:scale-95 duration-100">
+<span class="material-symbols-outlined text-[1.2rem]">terminal</span>
+</button>
+<button class="hover:text-[#e5e2e1] hover:bg-[#202020] p-1 rounded transition-all active:scale-95 duration-100">
+<span class="material-symbols-outlined text-[1.2rem]">settings</span>
+</button>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar (Settings Context) -->
+<aside class="bg-neutral-900 dark:bg-[#131313] text-[#9fcaff] font-['Inter'] text-[0.75rem] tracking-tight h-full w-64 flex flex-col overflow-hidden border-r border-[#353535]/10">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-8 h-8 rounded bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">account_tree</span>
+</div>
+<div>
+<div class="font-bold text-on-surface">Settings</div>
+<div class="text-[10px] text-outline opacity-60">Configuration Engine</div>
+</div>
+</div>
+<nav class="space-y-1">
+<button class="w-full flex items-center gap-3 px-3 py-2 text-[#a0a0a0] hover:text-[#e5e2e1] hover:bg-[#353535] transition-colors duration-200">
+<span class="material-symbols-outlined text-[1.1rem]">settings</span>
+<span>General</span>
+</button>
+<button class="w-full flex items-center gap-3 px-3 py-2 border-l-2 border-[#9fcaff] bg-[#353535] text-[#e5e2e1]">
+<span class="material-symbols-outlined text-[1.1rem]">rebase_edit</span>
+<span>Crawl Settings</span>
+</button>
+<button class="w-full flex items-center gap-3 px-3 py-2 text-[#a0a0a0] hover:text-[#e5e2e1] hover:bg-[#353535] transition-colors duration-200">
+<span class="material-symbols-outlined text-[1.1rem]">security</span>
+<span>Tool Permissions</span>
+</button>
+<button class="w-full flex items-center gap-3 px-3 py-2 text-[#a0a0a0] hover:text-[#e5e2e1] hover:bg-[#353535] transition-colors duration-200">
+<span class="material-symbols-outlined text-[1.1rem]">history</span>
+<span>Command History</span>
+</button>
+</nav>
+</div>
+<div class="mt-auto p-4 space-y-4">
+<div class="p-3 bg-surface-container-low rounded-lg border border-outline-variant/10">
+<div class="text-[10px] uppercase tracking-widest text-outline mb-2">System Status</div>
+<div class="flex items-center gap-2 text-tertiary">
+<div class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></div>
+<span class="font-mono">Engine Ready</span>
+</div>
+</div>
+<div class="flex items-center justify-between px-2">
+<span class="material-symbols-outlined text-[#a0a0a0] cursor-pointer hover:text-primary">info</span>
+<span class="material-symbols-outlined text-[#a0a0a0] cursor-pointer hover:text-primary">help</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto bg-surface p-8">
+<div class="max-w-4xl mx-auto space-y-12">
+<!-- Header Section -->
+<section>
+<h1 class="text-2xl font-black font-headline tracking-tighter text-on-surface mb-1">Crawl Settings</h1>
+<p class="text-on-surface-variant text-sm max-w-lg">Define the behavioral parameters for the AirBrowse autonomous crawler. These settings apply to all active sessions.</p>
+</section>
+<!-- Settings Form Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Numeric Inputs -->
+<div class="space-y-6">
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-outline">Max Depth</label>
+<div class="relative group">
+<input class="w-full bg-surface-container-lowest border-none focus:ring-1 focus:ring-primary/50 text-on-surface font-mono py-3 px-4 rounded transition-all" placeholder="Enter value..." type="number" value="2"/>
+<div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-outline group-hover:text-primary">
+<span class="material-symbols-outlined text-sm">layers</span>
+</div>
+</div>
+<p class="text-[10px] text-on-surface-variant/60 italic">Controls how many links deep the crawler will navigate from origin.</p>
+</div>
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-outline">Max Pages</label>
+<div class="relative group">
+<input class="w-full bg-surface-container-lowest border-none focus:ring-1 focus:ring-primary/50 text-on-surface font-mono py-3 px-4 rounded transition-all" placeholder="Enter value..." type="number" value="50"/>
+<div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-outline group-hover:text-primary">
+<span class="material-symbols-outlined text-sm">description</span>
+</div>
+</div>
+</div>
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-outline">Delay (ms)</label>
+<div class="relative group">
+<input class="w-full bg-surface-container-lowest border-none focus:ring-1 focus:ring-primary/50 text-on-surface font-mono py-3 px-4 rounded transition-all" placeholder="Enter value..." type="number" value="1000"/>
+<div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-outline group-hover:text-primary">
+<span class="material-symbols-outlined text-sm">timer</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Toggles & Logic -->
+<div class="space-y-6">
+<div class="p-6 bg-surface-container-low rounded-xl border border-outline-variant/10 space-y-6">
+<div class="flex items-center justify-between">
+<div>
+<div class="text-sm font-semibold text-on-surface">Same Domain Only</div>
+<div class="text-xs text-on-surface-variant">Prevent navigation to external URLs.</div>
+</div>
+<button class="w-10 h-5 bg-primary-container rounded-full relative transition-colors">
+<div class="absolute top-1 right-1 w-3 h-3 bg-white rounded-full shadow-sm"></div>
+</button>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<div class="text-sm font-semibold text-on-surface">Follow Sitemaps</div>
+<div class="text-xs text-on-surface-variant">Prioritize URL discovery via XML sitemaps.</div>
+</div>
+<button class="w-10 h-5 bg-surface-container-highest rounded-full relative transition-colors">
+<div class="absolute top-1 left-1 w-3 h-3 bg-outline rounded-full shadow-sm"></div>
+</button>
+</div>
+<div class="pt-4 border-t border-outline-variant/10">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary-container font-bold py-2 rounded-md transition-all hover:opacity-90 active:scale-[0.98]">
+                                    Apply Settings
+                                </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Activities Table -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="text-xs font-bold uppercase tracking-[0.2em] text-outline">Recent Activities</h2>
+<span class="text-[10px] text-primary cursor-pointer hover:underline">View All History</span>
+</div>
+<div class="overflow-hidden rounded-xl bg-surface-container-low border border-outline-variant/5">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 text-[10px] uppercase tracking-widest text-on-surface-variant">
+<th class="px-4 py-3 font-semibold">Crawl Job ID</th>
+<th class="px-4 py-3 font-semibold">Domain</th>
+<th class="px-4 py-3 font-semibold">Status</th>
+<th class="px-4 py-3 font-semibold">Date</th>
+<th class="px-4 py-3 font-semibold text-right">Artifacts</th>
+</tr>
+</thead>
+<tbody class="text-[0.75rem] font-mono">
+<tr class="border-b border-outline-variant/5 hover:bg-surface-container-highest/20 transition-colors">
+<td class="px-4 py-4 text-on-surface">AB-99234</td>
+<td class="px-4 py-4 text-outline">github.com/docs</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-tertiary-container/20 text-tertiary-fixed-dim text-[10px] font-bold">
+<span class="w-1 h-1 rounded-full bg-tertiary"></span> Completed
+                                        </span>
+</td>
+<td class="px-4 py-4 text-outline">2023-11-20 14:22</td>
+<td class="px-4 py-4 text-right">
+<a class="text-primary hover:underline flex items-center justify-end gap-1" href="#">
+<span>report.json</span>
+<span class="material-symbols-outlined text-xs">download</span>
+</a>
+</td>
+</tr>
+<tr class="border-b border-outline-variant/5 hover:bg-surface-container-highest/20 transition-colors">
+<td class="px-4 py-4 text-on-surface">AB-99230</td>
+<td class="px-4 py-4 text-outline">stripe.com/api</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-tertiary-container/20 text-tertiary-fixed-dim text-[10px] font-bold">
+<span class="w-1 h-1 rounded-full bg-tertiary"></span> Completed
+                                        </span>
+</td>
+<td class="px-4 py-4 text-outline">2023-11-20 09:45</td>
+<td class="px-4 py-4 text-right">
+<a class="text-primary hover:underline flex items-center justify-end gap-1" href="#">
+<span>docs.md</span>
+<span class="material-symbols-outlined text-xs">download</span>
+</a>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-highest/20 transition-colors">
+<td class="px-4 py-4 text-on-surface">AB-99221</td>
+<td class="px-4 py-4 text-outline">unknown.invalid</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-error-container/20 text-error text-[10px] font-bold">
+<span class="w-1 h-1 rounded-full bg-error"></span> Failed
+                                        </span>
+</td>
+<td class="px-4 py-4 text-outline">2023-11-19 22:10</td>
+<td class="px-4 py-4 text-right text-outline-variant">
+<span class="text-[10px]">TIMEOUT_ERR</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</main>
+</div>
+<!-- Status Bar Footer -->
+<footer class="bg-[#007acc] text-white font-['Inter'] text-[11px] font-medium fixed bottom-0 left-0 w-full flex items-center px-3 justify-between z-[100] h-6">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1 hover:bg-white/20 px-2 h-full cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-[14px]">cloud_done</span>
+<span>AirBrowse: Connected</span>
+</div>
+<div class="flex items-center gap-1 hover:bg-white/20 px-2 h-full cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-[14px]">account_tree</span>
+<span>main</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hover:bg-white/20 px-2 h-full cursor-pointer">utf-8</div>
+<div class="hover:bg-white/20 px-2 h-full cursor-pointer">javascript</div>
+<div class="flex items-center gap-1 hover:bg-white/20 px-2 h-full cursor-pointer">
+<span class="material-symbols-outlined text-[14px]">notifications</span>
+</div>
+</div>
+</footer>
+</body></html>

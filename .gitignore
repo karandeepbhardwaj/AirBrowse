@@ -1,0 +1,21 @@
+node_modules/
+dist/
+out/
+*.vsix
+.vscode-test/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+
+# Build artifacts
+*.tsbuildinfo

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=300">
+  <title>AirBrowse</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>AirBrowse</h1>
+      <span class="version">v0.1.0</span>
+    </div>
+
+    <div class="status-row">
+      <span class="status-dot" id="statusDot"></span>
+      <span class="status-text" id="statusText">Checking...</span>
+    </div>
+
+    <div class="info-section">
+      <label>Current Page</label>
+      <div class="info-value" id="currentUrl">—</div>
+    </div>
+
+    <div class="info-section">
+      <label>Last Command</label>
+      <div class="info-value" id="lastCommand">—</div>
+    </div>
+
+    <button id="reconnectBtn" class="btn">Reconnect</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

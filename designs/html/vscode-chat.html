@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AirBrowse - VS Code Chat Interface</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-dim": "#131313",
+                        "surface-container-low": "#1b1b1c",
+                        "on-tertiary-fixed": "#00201a",
+                        "outline": "#8a919d",
+                        "on-background": "#e5e2e1",
+                        "tertiary-fixed-dim": "#61dac1",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-variant": "#353535",
+                        "outline-variant": "#404751",
+                        "on-secondary-container": "#b6b5b4",
+                        "surface": "#131313",
+                        "on-error-container": "#ffdad6",
+                        "on-surface-variant": "#c0c7d3",
+                        "on-secondary": "#303030",
+                        "on-secondary-fixed-variant": "#474747",
+                        "on-tertiary-container": "#ffffff",
+                        "secondary": "#c8c6c6",
+                        "error-container": "#93000a",
+                        "surface-container": "#202020",
+                        "surface-tint": "#9fcaff",
+                        "inverse-primary": "#0061a4",
+                        "background": "#131313",
+                        "primary-container": "#007acc",
+                        "primary": "#9fcaff",
+                        "on-error": "#690005",
+                        "primary-fixed": "#d1e4ff",
+                        "primary-fixed-dim": "#9fcaff",
+                        "surface-bright": "#393939",
+                        "on-tertiary": "#00382e",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "inverse-surface": "#e5e2e1",
+                        "tertiary": "#61dac1",
+                        "error": "#ffb4ab",
+                        "secondary-fixed": "#e4e2e1",
+                        "secondary-container": "#474747",
+                        "on-surface": "#e5e2e1",
+                        "surface-container-highest": "#353535",
+                        "on-tertiary-fixed-variant": "#005144",
+                        "on-primary-fixed-variant": "#00497d",
+                        "on-primary": "#003258",
+                        "surface-container-high": "#2a2a2a",
+                        "inverse-on-surface": "#303030",
+                        "tertiary-fixed": "#80f7dc",
+                        "on-primary-container": "#ffffff",
+                        "on-primary-fixed": "#001d36",
+                        "tertiary-container": "#008672",
+                        "secondary-fixed-dim": "#c8c6c6"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #131313;
+            color: #e5e2e1;
+            font-family: 'Inter', sans-serif;
+        }
+        .code-block {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Custom scrollbar to match VS Code */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #353535;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #404751;
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+<!-- Top Navigation (TopAppBar from JSON) -->
+<header class="flex justify-between items-center px-4 py-1 w-full bg-[#0e0e0e] border-b border-[#353535]/20 z-50">
+<div class="flex items-center gap-4">
+<span class="text-lg font-black tracking-tighter text-[#9fcaff] font-headline">AirBrowse</span>
+<div class="flex gap-4 ml-4">
+<a class="text-[#a0a0a0] hover:text-[#e5e2e1] hover:bg-[#202020] px-2 py-0.5 font-mono text-[0.85rem] transition-all" href="#">Explorer</a>
+<a class="text-[#9fcaff] border-b-2 border-[#9fcaff] px-2 py-0.5 font-mono text-[0.85rem]" href="#">Console</a>
+<a class="text-[#a0a0a0] hover:text-[#e5e2e1] hover:bg-[#202020] px-2 py-0.5 font-mono text-[0.85rem] transition-all" href="#">Network</a>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="text-[#a0a0a0] hover:text-[#e5e2e1] scale-95 duration-100 flex items-center">
+<span class="material-symbols-outlined" data-icon="sync">sync</span>
+</button>
+<button class="text-[#a0a0a0] hover:text-[#e5e2e1] scale-95 duration-100 flex items-center">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+</button>
+<button class="text-[#a0a0a0] hover:text-[#e5e2e1] scale-95 duration-100 flex items-center">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Layout Container -->
+<main class="flex flex-1 overflow-hidden">
+<!-- Sidebar Navigation (SideNavBar from JSON) -->
+<nav class="hidden md:flex flex-col h-full w-64 border-r-0 bg-neutral-900 dark:bg-[#131313] font-['Inter'] text-[0.75rem] tracking-tight overflow-hidden">
+<div class="p-4 border-b border-[#353535]/20">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-8 h-8 rounded bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="robot_2">robot_2</span>
+</div>
+<div>
+<p class="text-[0.75rem] font-bold text-on-surface">AirBrowse</p>
+<p class="text-[0.65rem] text-on-surface-variant">Connected to Chrome</p>
+</div>
+</div>
+<button class="w-full bg-primary-container text-on-primary-container py-1.5 rounded-lg font-medium hover:opacity-90 active:scale-[0.99] transition-all">
+                    Start New Session
+                </button>
+</div>
+<div class="flex-1 py-2 overflow-y-auto">
+<div class="px-3 py-1 mb-1 border-l-2 border-[#9fcaff] bg-[#353535] text-[#e5e2e1] flex items-center gap-3 cursor-pointer group">
+<span class="material-symbols-outlined" data-icon="folder">folder</span>
+<span>Explorer</span>
+</div>
+<div class="px-3 py-1 mb-1 text-[#a0a0a0] hover:text-[#e5e2e1] hover:bg-[#353535] flex items-center gap-3 cursor-pointer transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span>Search</span>
+</div>
+<div class="px-3 py-1 mb-1 text-[#a0a0a0] hover:text-[#e5e2e1] hover:bg-[#353535] flex items-center gap-3 cursor-pointer transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="robot_2">robot_2</span>
+<span>AirBrowse</span>
+</div>
+<div class="px-3 py-1 mb-1 text-[#a0a0a0] hover:text-[#e5e2e1] hover:bg-[#353535] flex items-center gap-3 cursor-pointer transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="extension">extension</span>
+<span>Extensions</span>
+</div>
+</div>
+<div class="mt-auto p-4 flex flex-col gap-2 border-t border-[#353535]/20">
+<div class="flex items-center gap-3 text-[#a0a0a0] hover:text-[#e5e2e1] cursor-pointer text-[0.7rem]">
+<span class="material-symbols-outlined text-[16px]" data-icon="settings">settings</span>
+<span>Settings</span>
+</div>
+<div class="flex items-center gap-3 text-[#a0a0a0] hover:text-[#e5e2e1] cursor-pointer text-[0.7rem]">
+<span class="material-symbols-outlined text-[16px]" data-icon="account_circle">account_circle</span>
+<span>Account</span>
+</div>
+</div>
+</nav>
+<!-- VS Code Activity Bar (Mock) -->
+<div class="w-12 h-full bg-[#1b1b1c] flex flex-col items-center py-4 gap-4 border-r border-[#353535]/10">
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-on-surface" data-icon="content_copy">content_copy</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-on-surface" data-icon="search">search</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-on-surface" data-icon="account_tree">account_tree</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-on-surface" data-icon="bug_report">bug_report</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-on-surface" data-icon="extension">extension</span>
+<div class="mt-auto flex flex-col items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="chat" style="font-variation-settings: 'FILL' 1;">chat</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-on-surface" data-icon="account_circle">account_circle</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-on-surface" data-icon="settings">settings</span>
+</div>
+</div>
+<!-- VS Code Chat Canvas -->
+<section class="flex-1 flex flex-col bg-surface relative">
+<!-- Chat Header -->
+<div class="h-10 flex items-center px-4 border-b border-[#353535]/20 bg-surface-container-low justify-between">
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Chat: @browse</span>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline cursor-pointer hover:text-on-surface" data-icon="add">add</span>
+<span class="material-symbols-outlined text-[16px] text-outline cursor-pointer hover:text-on-surface" data-icon="close">close</span>
+</div>
+</div>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto px-6 py-8 space-y-10 max-w-4xl mx-auto w-full">
+<!-- User Prompt Bubble -->
+<div class="flex flex-col items-end gap-2 group">
+<div class="bg-surface-container-low px-4 py-3 rounded-lg border border-outline-variant/10 max-w-[85%]">
+<p class="text-sm font-body leading-relaxed">
+<span class="text-primary font-mono">@browse</span> summarize this documentation site and create a Word doc
+                        </p>
+</div>
+<span class="text-[10px] text-outline opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-tighter">Just now</span>
+</div>
+<!-- AirBrowse Participant Response -->
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-3">
+<div class="w-6 h-6 rounded bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[14px]" data-icon="robot_2" style="font-variation-settings: 'FILL' 1;">robot_2</span>
+</div>
+<span class="text-xs font-bold text-primary tracking-wide">AirBrowse (@browse)</span>
+</div>
+<div class="bg-surface-container-highest/30 p-6 rounded-xl border border-outline-variant/10 space-y-6">
+<div class="prose prose-invert max-w-none">
+<p class="text-on-surface text-sm leading-relaxed mb-4">
+                                I have analyzed the documentation pages from the internal wiki. Here is a summary of the architectural landscape and core modules:
+                            </p>
+<!-- Summary Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest p-4 rounded border border-outline-variant/20 hover:border-primary/40 transition-colors">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-tertiary text-sm" data-icon="description">description</span>
+<h4 class="text-xs font-bold text-on-surface">Core Architecture</h4>
+</div>
+<p class="text-[11px] text-on-surface-variant leading-normal">Outlines the event-driven microservices pattern and the use of Redis for pub/sub messaging across 14 internal nodes.</p>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest p-4 rounded border border-outline-variant/20 hover:border-primary/40 transition-colors">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="security">security</span>
+<h4 class="text-xs font-bold text-on-surface">Auth Framework</h4>
+</div>
+<p class="text-[11px] text-on-surface-variant leading-normal">Details the OAuth2 implementation and the custom JWT validation layer used by the gateway services.</p>
+</div>
+</div>
+<!-- Code Summary Snippet -->
+<div class="mt-6 space-y-2">
+<label class="text-[10px] text-outline font-mono uppercase tracking-widest">Structural Overview</label>
+<div class="bg-surface-container-lowest rounded-lg p-4 font-mono text-sm leading-relaxed border border-outline-variant/10 overflow-x-auto">
+<div class="flex gap-4">
+<span class="text-outline/40 select-none">1</span>
+<span><span class="text-[#c586c0]">interface</span> <span class="text-[#4ec9b0]">WikiSummary</span> {</span>
+</div>
+<div class="flex gap-4">
+<span class="text-outline/40 select-none">2</span>
+<span>  pagesScanned: <span class="text-[#4fc1ff]">12</span>;</span>
+</div>
+<div class="flex gap-4">
+<span class="text-outline/40 select-none">3</span>
+<span>  keyModules: <span class="text-[#ce9178]">['Auth', 'Compute', 'Storage']</span>;</span>
+</div>
+<div class="flex gap-4">
+<span class="text-outline/40 select-none">4</span>
+<span>  status: <span class="text-[#ce9178]">'Ready for Export'</span>;</span>
+</div>
+<div class="flex gap-4">
+<span class="text-outline/40 select-none">5</span>
+<span>}</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="pt-4 flex flex-wrap gap-3">
+<button class="bg-primary-container hover:bg-[#005c99] text-white px-4 py-2 rounded text-xs font-medium flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-primary-container/10">
+<span class="material-symbols-outlined text-[18px]" data-icon="description">description</span>
+                                Export to Word
+                            </button>
+<button class="bg-surface-container-high hover:bg-surface-container-highest text-on-surface border border-outline-variant/30 px-4 py-2 rounded text-xs font-medium flex items-center gap-2 transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px]" data-icon="markdown">markdown</span>
+                                Export to Markdown
+                            </button>
+</div>
+</div>
+</div>
+<!-- Spacer -->
+<div class="h-24"></div>
+</div>
+<!-- Floating Input Area -->
+<div class="absolute bottom-4 left-0 right-0 px-6 max-w-4xl mx-auto w-full">
+<div class="bg-surface-container-high/80 backdrop-blur-xl border border-outline-variant/30 rounded-xl p-3 shadow-2xl">
+<div class="flex items-center gap-3">
+<div class="flex-1 flex items-center gap-2 px-3 py-2 bg-surface-container-lowest rounded border border-outline-variant/20 focus-within:border-primary/50 transition-all">
+<span class="text-primary font-mono text-xs">@browse</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-outline/50" placeholder="Ask follow-up or provide feedback..." type="text"/>
+</div>
+<button class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-white hover:opacity-90">
+<span class="material-symbols-outlined text-[18px]" data-icon="send">send</span>
+</button>
+</div>
+<div class="flex gap-4 mt-2 px-2">
+<div class="flex items-center gap-1 text-[10px] text-outline hover:text-on-surface cursor-pointer">
+<span class="material-symbols-outlined text-[12px]" data-icon="attachment">attachment</span>
+<span>Attach context</span>
+</div>
+<div class="flex items-center gap-1 text-[10px] text-outline hover:text-on-surface cursor-pointer">
+<span class="material-symbols-outlined text-[12px]" data-icon="history">history</span>
+<span>History</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Status Bar (Footer from JSON) -->
+<footer class="fixed bottom-0 left-0 w-full h-6 bg-[#007acc] text-white flex items-center px-3 justify-between z-[100] font-['Inter'] text-[11px] font-medium cursor-pointer">
+<div class="flex items-center gap-4 h-full">
+<div class="flex items-center gap-1.5 h-full px-2 hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined text-[12px]" data-icon="sync">sync</span>
+<span class="font-bold">AirBrowse: Connected (localhost:8765)</span>
+</div>
+<div class="flex items-center gap-1.5 h-full px-2 hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined text-[12px]" data-icon="account_tree">account_tree</span>
+<span>main</span>
+</div>
+<div class="flex items-center gap-1.5 h-full px-2 hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined text-[12px]" data-icon="javascript">javascript</span>
+<span>utf-8</span>
+</div>
+</div>
+<div class="flex items-center gap-3 h-full">
+<div class="flex items-center gap-1.5 h-full px-2 hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined text-[12px]" data-icon="check_circle">check_circle</span>
+<span>Prettier</span>
+</div>
+<div class="flex items-center gap-1.5 h-full px-2 hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined text-[12px]" data-icon="notifications">notifications</span>
+<span>0</span>
+</div>
+</div>
+</footer>
+</body></html>

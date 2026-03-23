@@ -1,0 +1,9 @@
+{
+  "name": "airbrowse-browser",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AirBrowse Chrome Extension - Browser automation tools",
+  "scripts": {
+    "build": "node build.js"
+  }
+}

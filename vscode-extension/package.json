@@ -1,0 +1,616 @@
+{
+  "name": "airbrowse",
+  "displayName": "AirBrowse",
+  "description": "Browser automation powered by GitHub Copilot's native models",
+  "version": "0.1.0",
+  "publisher": "airbrowse",
+  "engines": {
+    "vscode": "^1.99.0"
+  },
+  "categories": [
+    "AI",
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "extensionDependencies": [
+    "github.copilot-chat"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "airbrowse.connect",
+        "title": "AirBrowse: Connect to Browser"
+      },
+      {
+        "command": "airbrowse.disconnect",
+        "title": "AirBrowse: Disconnect from Browser"
+      },
+      {
+        "command": "airbrowse.screenshot",
+        "title": "AirBrowse: Take Screenshot"
+      },
+      {
+        "command": "airbrowse.extractPage",
+        "title": "AirBrowse: Extract Page Content"
+      },
+      {
+        "command": "airbrowse.quickCrawl",
+        "title": "AirBrowse: Quick Crawl"
+      }
+    ],
+    "configuration": {
+      "title": "AirBrowse",
+      "properties": {
+        "airbrowse.relay.port": {
+          "type": "number",
+          "default": 8765,
+          "description": "WebSocket relay server port"
+        },
+        "airbrowse.crawl.maxDepth": {
+          "type": "number",
+          "default": 2,
+          "description": "Maximum crawl depth"
+        },
+        "airbrowse.crawl.maxPages": {
+          "type": "number",
+          "default": 50,
+          "description": "Maximum number of pages to crawl"
+        },
+        "airbrowse.crawl.delayMs": {
+          "type": "number",
+          "default": 1000,
+          "description": "Delay between crawl requests in milliseconds"
+        }
+      }
+    },
+    "chatParticipants": [
+      {
+        "id": "airbrowse.browse",
+        "fullName": "AirBrowse",
+        "name": "browse",
+        "description": "Browser automation - crawl, extract, test web pages",
+        "isSticky": true
+      }
+    ],
+    "languageModelTools": [
+      {
+        "name": "airbrowse_getPageText",
+        "displayName": "Get Page Text",
+        "description": "Extract clean readable text from the current page",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "selector": {
+              "type": "string",
+              "description": "Optional CSS selector to scope extraction"
+            }
+          }
+        },
+        "modelDescription": "Extract clean readable text from the current browser page using Readability. Use this when you need to read, summarize, or analyze web page content. Returns the main article text, title, and excerpt."
+      },
+      {
+        "name": "airbrowse_getPageMarkdown",
+        "displayName": "Get Page Markdown",
+        "description": "Convert the current page content to Markdown",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "selector": {
+              "type": "string",
+              "description": "Optional CSS selector to scope extraction"
+            }
+          }
+        },
+        "modelDescription": "Convert the current browser page content to clean Markdown format. Use this when you need structured text output from a web page for summarization, documentation, or file generation."
+      },
+      {
+        "name": "airbrowse_getPageHTML",
+        "displayName": "Get Page HTML",
+        "description": "Get raw HTML from the current page",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "selector": {
+              "type": "string",
+              "description": "Optional CSS selector to scope extraction"
+            }
+          }
+        },
+        "modelDescription": "Get the raw HTML source of the current browser page or a specific element. Use this when you need to inspect the DOM structure or extract HTML content."
+      },
+      {
+        "name": "airbrowse_getPageTables",
+        "displayName": "Get Page Tables",
+        "description": "Extract all tables from the current page as JSON",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "selector": {
+              "type": "string",
+              "description": "Optional CSS selector to target a specific table"
+            }
+          }
+        },
+        "modelDescription": "Extract all HTML tables from the current browser page as structured JSON arrays with headers and rows. Use this when the user wants to extract tabular data for export to Excel, CSV, or analysis."
+      },
+      {
+        "name": "airbrowse_getPageLinks",
+        "displayName": "Get Page Links",
+        "description": "Get all links from the current page",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "selector": {
+              "type": "string",
+              "description": "Optional CSS selector to scope link extraction"
+            },
+            "sameDomain": {
+              "type": "boolean",
+              "description": "If true, only return links on the same domain"
+            }
+          }
+        },
+        "modelDescription": "Get all hyperlinks from the current browser page with their text, URL, and whether they are internal links. Use this to discover pages for crawling or to analyze site structure."
+      },
+      {
+        "name": "airbrowse_getPageStructure",
+        "displayName": "Get Page Structure",
+        "description": "Get the heading outline (h1-h6) of the current page",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        },
+        "modelDescription": "Get the heading outline (h1-h6 hierarchy) of the current browser page. Use this to understand page structure before extracting specific sections."
+      },
+      {
+        "name": "airbrowse_screenshot",
+        "displayName": "Take Screenshot",
+        "description": "Capture the current page as a PNG image",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "fullPage": {
+              "type": "boolean",
+              "description": "If true, capture the full scrollable page"
+            }
+          }
+        },
+        "modelDescription": "Capture a screenshot of the current browser page as a PNG image. Use this for visual verification during UI testing or to show the user what the page looks like."
+      },
+      {
+        "name": "airbrowse_navigateTo",
+        "displayName": "Navigate To URL",
+        "description": "Navigate the browser to a specified URL",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "The URL to navigate to"
+            }
+          },
+          "required": [
+            "url"
+          ]
+        },
+        "modelDescription": "Navigate the browser to a specified URL. Use this to go to a new page before reading or interacting with it."
+      },
+      {
+        "name": "airbrowse_navigateBack",
+        "displayName": "Navigate Back",
+        "description": "Go back in browser history",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        },
+        "modelDescription": "Go back to the previous page in browser history. Use this to return to a prior page during multi-page workflows."
+      },
+      {
+        "name": "airbrowse_getCurrentUrl",
+        "displayName": "Get Current URL",
+        "description": "Get the current URL and page title",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        },
+        "modelDescription": "Get the current URL and page title from the browser. Use this to verify which page is currently loaded."
+      },
+      {
+        "name": "airbrowse_click",
+        "displayName": "Click Element",
+        "description": "Click an element on the page",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "selector": {
+              "type": "string",
+              "description": "CSS selector of the element to click"
+            }
+          },
+          "required": [
+            "selector"
+          ]
+        },
+        "modelDescription": "Click an element on the current browser page identified by CSS selector. Use this for UI interaction like clicking buttons, links, or other interactive elements."
+      },
+      {
+        "name": "airbrowse_type",
+        "displayName": "Type Text",
+        "description": "Type text into an input element",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "selector": {
+              "type": "string",
+              "description": "CSS selector of the input element"
+            },
+            "text": {
+              "type": "string",
+              "description": "The text to type"
+            }
+          },
+          "required": [
+            "selector",
+            "text"
+          ]
+        },
+        "modelDescription": "Type text into an input field on the current browser page. Use this to fill in forms, search boxes, or other text inputs."
+      },
+      {
+        "name": "airbrowse_selectOption",
+        "displayName": "Select Option",
+        "description": "Select an option from a dropdown element",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "selector": {
+              "type": "string",
+              "description": "CSS selector of the select element"
+            },
+            "value": {
+              "type": "string",
+              "description": "The value to select"
+            }
+          },
+          "required": [
+            "selector",
+            "value"
+          ]
+        },
+        "modelDescription": "Select an option from a dropdown/select element on the current browser page. Use this to choose values from dropdown menus."
+      },
+      {
+        "name": "airbrowse_submitForm",
+        "displayName": "Submit Form",
+        "description": "Submit a form element",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "selector": {
+              "type": "string",
+              "description": "CSS selector of the form element"
+            }
+          },
+          "required": [
+            "selector"
+          ]
+        },
+        "modelDescription": "Submit a form on the current browser page. Use this after filling in form fields to submit the form."
+      },
+      {
+        "name": "airbrowse_scrollTo",
+        "displayName": "Scroll To",
+        "description": "Scroll the page to an element or position",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "selector": {
+              "type": "string",
+              "description": "Optional CSS selector to scroll to"
+            },
+            "y": {
+              "type": "number",
+              "description": "Optional vertical scroll position in pixels"
+            }
+          }
+        },
+        "modelDescription": "Scroll the browser page to a specific element or vertical position. Use this to bring content into view before interacting with it."
+      },
+      {
+        "name": "airbrowse_crawlSite",
+        "displayName": "Crawl Site",
+        "description": "Crawl multiple pages starting from a URL",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "startUrl": {
+              "type": "string",
+              "description": "The URL to start crawling from"
+            },
+            "maxDepth": {
+              "type": "number",
+              "description": "Maximum depth to crawl"
+            },
+            "maxPages": {
+              "type": "number",
+              "description": "Maximum number of pages to crawl"
+            }
+          },
+          "required": [
+            "startUrl"
+          ]
+        },
+        "modelDescription": "Crawl multiple pages on the same domain starting from a URL. Extracts text, markdown, tables, and links from each page. Use this when the user wants to scrape or summarize an entire site or section."
+      },
+      {
+        "name": "airbrowse_crawlCancel",
+        "displayName": "Cancel Crawl",
+        "description": "Cancel a running crawl operation",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        },
+        "modelDescription": "Cancel a currently running crawl operation. Use this to stop a crawl that is taking too long or is no longer needed."
+      },
+      {
+        "name": "airbrowse_getConsoleLogs",
+        "displayName": "Get Console Logs",
+        "description": "Get console output from the browser",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "level": {
+              "type": "string",
+              "enum": [
+                "log",
+                "warn",
+                "error"
+              ],
+              "description": "Filter by log level"
+            }
+          }
+        },
+        "modelDescription": "Get console log output from the browser (log, warn, error). Use this for debugging or monitoring browser-side issues."
+      },
+      {
+        "name": "airbrowse_getNetworkRequests",
+        "displayName": "Get Network Requests",
+        "description": "Get network requests made by the page",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "filter": {
+              "type": "string",
+              "description": "Optional filter string to match request URLs"
+            }
+          }
+        },
+        "modelDescription": "Get recent network requests made by the browser page. Use this for debugging API calls or monitoring page resource loading."
+      },
+      {
+        "name": "airbrowse_generateExcel",
+        "displayName": "Generate Excel",
+        "description": "Create an Excel (.xlsx) file from data",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "sheets": {
+              "type": "array",
+              "description": "Array of sheet definitions with name, headers, and rows",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Sheet name"
+                  },
+                  "headers": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Column headers"
+                  },
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {}
+                    },
+                    "description": "Row data"
+                  }
+                }
+              }
+            }
+          },
+          "required": [
+            "sheets"
+          ]
+        },
+        "modelDescription": "Create an Excel (.xlsx) file from structured data with multiple sheets, headers, and rows. Use this when the user wants to export data to a spreadsheet."
+      },
+      {
+        "name": "airbrowse_generateCSV",
+        "displayName": "Generate CSV",
+        "description": "Create a CSV file from data",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Column headers"
+            },
+            "rows": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {}
+              },
+              "description": "Row data"
+            }
+          },
+          "required": [
+            "headers",
+            "rows"
+          ]
+        },
+        "modelDescription": "Create a CSV file from structured data with headers and rows. Use this when the user wants a simple text-based data export."
+      },
+      {
+        "name": "airbrowse_generateWord",
+        "displayName": "Generate Word Document",
+        "description": "Create a Word (.docx) document",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Document title"
+            },
+            "sections": {
+              "type": "array",
+              "description": "Array of document sections",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "heading": {
+                    "type": "string",
+                    "description": "Section heading"
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Section content"
+                  }
+                }
+              }
+            }
+          },
+          "required": [
+            "title",
+            "sections"
+          ]
+        },
+        "modelDescription": "Create a Word (.docx) document with a title and sections. Use this when the user wants to generate a formatted report or document."
+      },
+      {
+        "name": "airbrowse_generateMarkdown",
+        "displayName": "Generate Markdown",
+        "description": "Create a Markdown (.md) file",
+        "tags": [
+          "airbrowse"
+        ],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Document title"
+            },
+            "content": {
+              "type": "string",
+              "description": "Markdown content"
+            }
+          },
+          "required": [
+            "title",
+            "content"
+          ]
+        },
+        "modelDescription": "Create a Markdown (.md) file with a title and content. Use this when the user wants to save content as Markdown."
+      }
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.99.0",
+    "@types/ws": "^8.18.1",
+    "@vscode/vsce": "^3.0.0",
+    "ts-loader": "^9.5.0",
+    "typescript": "^5.5.0",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.0"
+  },
+  "dependencies": {
+    "docx": "^9.0.0",
+    "exceljs": "^4.4.0",
+    "ws": "^8.18.0"
+  },
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch",
+    "compile": "tsc -p ./",
+    "package": "vsce package"
+  }
+}

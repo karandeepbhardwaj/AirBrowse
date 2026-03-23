@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AirBrowse Chrome Extension Overlay</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-dim": "#131313",
+                        "surface-container-low": "#1b1b1c",
+                        "on-tertiary-fixed": "#00201a",
+                        "outline": "#8a919d",
+                        "on-background": "#e5e2e1",
+                        "tertiary-fixed-dim": "#61dac1",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-variant": "#353535",
+                        "outline-variant": "#404751",
+                        "on-secondary-container": "#b6b5b4",
+                        "surface": "#131313",
+                        "on-error-container": "#ffdad6",
+                        "on-surface-variant": "#c0c7d3",
+                        "on-secondary": "#303030",
+                        "on-secondary-fixed-variant": "#474747",
+                        "on-tertiary-container": "#ffffff",
+                        "secondary": "#c8c6c6",
+                        "error-container": "#93000a",
+                        "surface-container": "#202020",
+                        "surface-tint": "#9fcaff",
+                        "inverse-primary": "#0061a4",
+                        "background": "#131313",
+                        "primary-container": "#007acc",
+                        "primary": "#9fcaff",
+                        "on-error": "#690005",
+                        "primary-fixed": "#d1e4ff",
+                        "primary-fixed-dim": "#9fcaff",
+                        "surface-bright": "#393939",
+                        "on-tertiary": "#00382e",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "inverse-surface": "#e5e2e1",
+                        "tertiary": "#61dac1",
+                        "error": "#ffb4ab",
+                        "secondary-fixed": "#e4e2e1",
+                        "secondary-container": "#474747",
+                        "on-surface": "#e5e2e1",
+                        "surface-container-highest": "#353535",
+                        "on-tertiary-fixed-variant": "#005144",
+                        "on-primary-fixed-variant": "#00497d",
+                        "on-primary": "#003258",
+                        "surface-container-high": "#2a2a2a",
+                        "inverse-on-surface": "#303030",
+                        "tertiary-fixed": "#80f7dc",
+                        "on-primary-container": "#ffffff",
+                        "on-primary-fixed": "#001d36",
+                        "tertiary-container": "#008672",
+                        "secondary-fixed-dim": "#c8c6c6"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(32, 32, 32, 0.85);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-surface-dim text-on-surface font-body min-h-screen overflow-hidden">
+<!-- Browser Chrome Simulation -->
+<div class="flex flex-col h-screen w-full relative">
+<!-- TopAppBar (Browser Header) -->
+<header class="flex justify-between items-center px-4 py-1 w-full bg-[#0e0e0e] border-b border-[#353535]/20 font-mono text-[0.85rem] z-50">
+<div class="flex items-center gap-4">
+<div class="flex gap-1.5 px-2">
+<div class="w-3 h-3 rounded-full bg-error/40"></div>
+<div class="w-3 h-3 rounded-full bg-tertiary/40"></div>
+<div class="w-3 h-3 rounded-full bg-primary/40"></div>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-lowest px-4 py-1.5 rounded-lg border border-outline-variant/10 w-[600px]">
+<span class="material-symbols-outlined text-[1rem] text-outline">lock</span>
+<span class="text-on-surface-variant">http://internal-wiki/api-docs</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer">sync</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">terminal</span>
+<div class="w-8 h-8 rounded bg-primary/20 border border-primary/30 flex items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined text-primary" data-icon="robot_2">robot_2</span>
+</div>
+</div>
+</header>
+<!-- Main Content Area (Internal Wiki Simulation) -->
+<main class="flex-1 overflow-y-auto bg-surface-container-lowest relative p-12">
+<!-- Content Anchor -->
+<div class="max-w-4xl mx-auto">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-outline" data-icon="description">description</span>
+</div>
+<div>
+<h1 class="text-3xl font-headline font-extrabold tracking-tight text-on-surface">API Documentation</h1>
+<p class="text-on-surface-variant font-mono text-sm uppercase tracking-widest">Internal Wiki / Engineering</p>
+</div>
+</div>
+<!-- Bento Grid Content -->
+<div class="grid grid-cols-12 gap-6">
+<div class="col-span-8 space-y-6">
+<section class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/5">
+<h2 class="text-xl font-bold mb-4">REST Endpoints</h2>
+<div class="space-y-4">
+<div class="flex items-center gap-4 p-3 bg-surface-container-lowest rounded-lg">
+<span class="bg-tertiary-container text-white px-2 py-0.5 rounded text-[10px] font-bold">GET</span>
+<code class="font-mono text-primary">/v1/user/profile</code>
+<span class="ml-auto text-outline text-xs">Returns user details</span>
+</div>
+<div class="flex items-center gap-4 p-3 bg-surface-container-lowest rounded-lg">
+<span class="bg-primary-container text-white px-2 py-0.5 rounded text-[10px] font-bold">POST</span>
+<code class="font-mono text-primary">/v1/auth/session</code>
+<span class="ml-auto text-outline text-xs">Creates auth token</span>
+</div>
+<div class="flex items-center gap-4 p-3 bg-surface-container-lowest rounded-lg">
+<span class="bg-surface-container-highest text-on-surface-variant px-2 py-0.5 rounded text-[10px] font-bold">PUT</span>
+<code class="font-mono text-primary">/v1/settings/update</code>
+<span class="ml-auto text-outline text-xs">Update preferences</span>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-2 gap-6">
+<div class="bg-surface-container p-6 rounded-xl">
+<h3 class="font-bold text-sm mb-2 text-on-surface">Authentication</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">OAuth2 bearer tokens are required for all production endpoints. Local development uses static tokens.</p>
+</div>
+<div class="bg-surface-container p-6 rounded-xl">
+<h3 class="font-bold text-sm mb-2 text-on-surface">Rate Limiting</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Tiered limits apply: 100 req/min for Guest, 10k req/min for Admin roles.</p>
+</div>
+</div>
+</div>
+<div class="col-span-4 space-y-6">
+<div class="bg-surface-container-high p-6 rounded-xl">
+<h3 class="font-bold text-xs uppercase tracking-tighter text-outline mb-4">Quick Links</h3>
+<ul class="space-y-3 font-mono text-sm">
+<li class="text-primary hover:underline cursor-pointer">Postman Collection</li>
+<li class="text-primary hover:underline cursor-pointer">SDK Reference</li>
+<li class="text-primary hover:underline cursor-pointer">Support Slack</li>
+</ul>
+</div>
+<div class="bg-surface-container-low border border-primary/10 p-6 rounded-xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-2 opacity-20">
+<span class="material-symbols-outlined text-4xl" data-icon="school">school</span>
+</div>
+<h3 class="font-bold text-sm mb-2">Tutorials</h3>
+<p class="text-xs text-on-surface-variant mb-4">Master the AirBrowse query language in under 5 minutes.</p>
+<button class="w-full bg-surface-container-highest text-on-surface py-2 rounded text-xs font-bold transition-all hover:bg-primary hover:text-on-primary-container">View Guide</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Page Overlay Toast: Crawl in Progress -->
+<div class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-4 bg-surface-container-high/90 backdrop-blur-md px-6 py-3 rounded-full border border-primary/20 shadow-2xl">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="cloud_download">cloud_download</span>
+<span class="text-sm font-medium tracking-tight">Crawl in Progress: <span class="text-primary font-mono">12/45 pages...</span></span>
+</div>
+<div class="h-4 w-[1px] bg-outline/20"></div>
+<button class="text-xs font-bold uppercase tracking-widest text-error hover:text-on-error-container transition-colors">Cancel</button>
+</div>
+</main>
+<!-- Extension Popup (Top Right Anchor) -->
+<div class="absolute top-14 right-4 w-80 glass-panel rounded-xl border border-outline-variant/20 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6)] z-[100] overflow-hidden">
+<!-- Popup Header -->
+<div class="px-5 py-4 flex items-center justify-between border-b border-outline-variant/10">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary animate-pulse shadow-[0_0_8px_rgba(97,218,193,0.6)]"></div>
+<span class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-tertiary">Connected</span>
+</div>
+<span class="material-symbols-outlined text-outline text-lg cursor-pointer hover:text-on-surface" data-icon="close">close</span>
+</div>
+<!-- Popup Main Content -->
+<div class="p-5">
+<div class="flex items-center justify-center py-6">
+<div class="relative">
+<div class="absolute inset-0 bg-tertiary/10 blur-2xl rounded-full"></div>
+<span class="material-symbols-outlined text-tertiary text-6xl relative" data-icon="public" style="font-variation-settings: 'FILL' 1;">public</span>
+</div>
+</div>
+<div class="space-y-6">
+<!-- URL Context -->
+<div class="space-y-1.5">
+<label class="text-[0.6rem] font-bold uppercase tracking-wider text-outline">Current Context</label>
+<div class="bg-surface-container-lowest p-2.5 rounded-lg border border-outline-variant/10 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="link">link</span>
+<span class="text-[0.7rem] font-mono truncate text-on-surface-variant">internal-wiki/api-docs</span>
+</div>
+</div>
+<!-- Command Log -->
+<div class="space-y-2">
+<label class="text-[0.6rem] font-bold uppercase tracking-wider text-outline">Command Log</label>
+<div class="space-y-2">
+<div class="bg-surface-container-low p-3 rounded-lg flex items-start justify-between">
+<div class="flex flex-col gap-0.5">
+<code class="text-[0.75rem] text-on-surface font-mono">page.getMarkdown</code>
+<span class="text-[0.6rem] text-outline">Executed 2s ago</span>
+</div>
+<span class="material-symbols-outlined text-tertiary text-sm" data-icon="check_circle">check_circle</span>
+</div>
+<div class="bg-surface-container-low/50 p-3 rounded-lg flex items-start justify-between opacity-60">
+<div class="flex flex-col gap-0.5">
+<code class="text-[0.75rem] text-on-surface font-mono">page.screenshot</code>
+<span class="text-[0.6rem] text-outline">Executed 1m ago</span>
+</div>
+<span class="material-symbols-outlined text-tertiary text-sm" data-icon="check_circle">check_circle</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Popup Footer CTA -->
+<div class="p-5 bg-surface-container/50 mt-2">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary-container py-2.5 rounded-lg text-xs font-bold shadow-lg shadow-primary/10 transition-transform active:scale-95">
+                    Start New Session
+                </button>
+</div>
+</div>
+<!-- Footer StatusBar -->
+<footer class="fixed bottom-0 left-0 w-full flex items-center px-3 justify-between z-[100] h-6 bg-[#007acc] text-white font-['Inter'] text-[11px] font-medium">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[12px]" data-icon="terminal">terminal</span>
+<span class="font-bold">AirBrowse: Connected</span>
+</div>
+<span class="opacity-70">main*</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1 hover:bg-white/20 px-2 h-full cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-[12px]" data-icon="sync">sync</span>
+<span>Syncing...</span>
+</div>
+<div class="flex items-center gap-3">
+<span>UTF-8</span>
+<span>JavaScript</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="notifications">notifications</span>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

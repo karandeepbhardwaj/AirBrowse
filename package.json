@@ -1,0 +1,14 @@
+{
+  "name": "airbrowse",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "vscode-extension",
+    "browser-extension"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=vscode-extension",
+    "watch": "npm run watch --workspace=vscode-extension",
+    "package": "node scripts/package-all.js"
+  }
+}
